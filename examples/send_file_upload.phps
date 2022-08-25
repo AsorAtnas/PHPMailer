@@ -1,13 +1,16 @@
 <?php
 
-/**
- * PHPMailer simple file upload and send example.
- */
+//require_once("PHPMailerAutoload.php");
 
-//Import the PHPMailer class into the global namespace
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php';
+require '../src/Exception.php';
+require '../src/PHPMailer.php';
+require '../src/SMTP.php';
+
+
+$mail = new PHPMailer();
 
 $msg = '';
 if (array_key_exists('userfile', $_FILES)) {
@@ -19,9 +22,11 @@ if (array_key_exists('userfile', $_FILES)) {
     //Define a safe location to move the uploaded file to, preserving the extension
     $uploadfile = tempnam(sys_get_temp_dir(), hash('sha256', $_FILES['userfile']['name'])) . '.' . $ext;
 
-    if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-        //Upload handled successfully
-        //Now create a message
+     if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+        // Upload handled successfully
+        // Now create a message
+        // This should be somewhere in your include_path
+        require '../PHPMailerAutoload.php';
         $mail = new PHPMailer();
         $mail->setFrom('from@example.com', 'First Last');
         $mail->addAddress('whoto@example.com', 'John Doe');
